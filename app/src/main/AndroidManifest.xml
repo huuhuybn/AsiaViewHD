@@ -7,12 +7,17 @@
 	<application
 			android:name=".mApp"
 			android:allowBackup="true"
-			android:icon="@mipmap/ic_launcher"
 			android:exported="true"
+			android:icon="@mipmap/ic_launcher"
 			android:label="@string/app_name"
 			android:roundIcon="@mipmap/ic_launcher_round"
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme">
+		<activity
+				android:name=".PhotoPagerActivity"
+				android:label="@string/title_activity_photo_pager"
+				android:theme="@style/AppTheme.NoActionBar">
+		</activity>
 		<activity
 				android:name=".chat.GroupChatActivity"
 				android:label="@string/title_activity_group_chat"
@@ -26,8 +31,8 @@
 				android:theme="@style/AppTheme.NoActionBar"/>
 		<activity
 				android:name=".HomeActivity"
-				android:label="@string/title_activity_home"
 				android:exported="true"
+				android:label="@string/title_activity_home"
 				android:theme="@style/AppTheme.NoActionBar">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>

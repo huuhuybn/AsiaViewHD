@@ -20,4 +20,13 @@
 		<item name="colorAccent">@color/colorAccent</item>
 	</style>
 
+	<style name="downloadTextView">
+		<item name="android:drawableLeft">@drawable/ic_download</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textAllCaps">false</item>
+		<item name="android:textColor">@color/colorAccent</item>
+		<item name="android:padding">8dp</item>
+
+	</style>
+
 </resources>

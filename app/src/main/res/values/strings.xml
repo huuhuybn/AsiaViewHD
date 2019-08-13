@@ -19,5 +19,8 @@
 	<string name="category">Category</string>
 	<string name="album">%d albums</string>
 	<string name="group_link">https://www.facebook.com/groups/370846400243009</string>
+	<string name="title_activity_photo_pager">PhotoPagerActivity</string>
+	<string name="tab_text_1">Tab 1</string>
+	<string name="tab_text_2">Tab 2</string>
 
 </resources>

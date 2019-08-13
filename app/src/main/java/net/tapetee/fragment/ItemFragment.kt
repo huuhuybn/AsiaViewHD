@@ -10,15 +10,20 @@ import androidx.recyclerview.widget.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.content_home.*
 import kotlinx.android.synthetic.main.fragment_item_list.*
-import net.tapetee.R
 import net.tapetee.adapter.PostAdapter
 
 import net.tapetee.model.post.Post
 import net.tapetee.retrofit.AsiaRetrofit
+import net.tapetee.view.EndlessRecyclerViewScrollListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.ArrayList
+import kotlin.collections.ArrayList
+import androidx.core.os.HandlerCompat.postDelayed
+import android.os.Handler
+import net.tapetee.R
+import net.tapetee.view.GridItemDecoration
+
 
 /**
  * A fragment representing a list of Items.
@@ -31,17 +36,35 @@ class ItemFragment : Fragment(), Callback<Collection<Post>> {
     private var page = 1
     private val perPage = 10
     private var listPost: ArrayList<Post>? = null
+    private var callBack: Callback<Collection<Post>>? = null
+
 
     private var layoutManager: StaggeredGridLayoutManager?? = null
 
 
     override fun onFailure(call: Call<Collection<Post>>, t: Throwable) {
-
+        swipeToRefresh.isRefreshing = false
     }
 
     override fun onResponse(call: Call<Collection<Post>>, response: Response<Collection<Post>>) {
-        listPost?.addAll(response.body()!!)
-        list.adapter?.notifyDataSetChanged()
+        swipeToRefresh.isRefreshing = false
+        if (response.body() != null) {
+
+            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            layoutManager!!.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+
+            listPost?.addAll(response.body()!!)
+            list.adapter?.notifyDataSetChanged()
+
+
+        } else {
+            list.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutManager!!) {
+                override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+
+                }
+            })
+
+        }
     }
 
 
@@ -51,11 +74,16 @@ class ItemFragment : Fragment(), Callback<Collection<Post>> {
         list.adapter = PostAdapter(context!!, listPost as ArrayList<Post>, listener)
 
         layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        layoutManager?.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+        layoutManager!!.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
         list.layoutManager = layoutManager
-        list.itemAnimator = DefaultItemAnimator()
+        //This will for default android divider
+        list.addItemDecoration(GridItemDecoration(10, 2))
+
+
+        callBack = this
 
     }
+
 
     // TODO: Customize parameters
     private var columnCount = 1
@@ -75,7 +103,27 @@ class ItemFragment : Fragment(), Callback<Collection<Post>> {
         super.onViewCreated(view, savedInstanceState)
         initData();
 
+        swipeToRefresh.isRefreshing = true
+
+        swipeToRefresh.setOnRefreshListener {
+
+            page = 1
+
+            listPost?.clear()
+            list.adapter?.notifyDataSetChanged()
+
+            AsiaRetrofit.create().getLatestPost(page, perPage).enqueue(this)
+
+        }
+
         AsiaRetrofit.create().getLatestPost(page, perPage).enqueue(this)
+//        list.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutManager!!) {
+//            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+//                this@ItemFragment.page++
+//                AsiaRetrofit.create().getLatestPost(page, perPage).enqueue((callBack))
+//
+//            }
+//        })
     }
 
     override fun onCreateView(

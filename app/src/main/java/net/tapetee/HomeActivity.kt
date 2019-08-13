@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.startapp.android.publish.adsCommon.StartAppSDK
 import net.tapetee.chat.GroupChatActivity
 import net.tapetee.fragment.ItemFragment
 import net.tapetee.model.post.Post
@@ -27,6 +28,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val intent = Intent(this, PostActivity::class.java)
         intent.putExtra("data", item?.id)
+        intent.putExtra("name", item?.title?.rendered)
         startActivity(intent)
 
     }
@@ -34,6 +36,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        StartAppSDK.init(this, "207929456", true);
+
         initView()
     }
 
@@ -83,7 +87,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
-
 
         return if (id == R.id.action_settings) {
             true

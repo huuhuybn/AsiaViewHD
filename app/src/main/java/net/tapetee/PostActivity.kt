@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
@@ -25,8 +24,12 @@ class PostActivity : AppCompatActivity(), Callback<Collection<Wallpaper>> {
 
     override fun onResponse(call: Call<Collection<Wallpaper>>, response: Response<Collection<Wallpaper>>) {
         listWall?.addAll(response.body()!!)
+
+        wallAdapter?.count = response.body()!!.size
+
         lvListMedia.adapter?.notifyDataSetChanged()
         swipeToRefresh.isRefreshing = false
+        swipeToRefresh.isEnabled = false
 
     }
 
@@ -54,6 +57,10 @@ class PostActivity : AppCompatActivity(), Callback<Collection<Wallpaper>> {
         initData()
 
 
+        val title = intent.getStringExtra("name")
+        supportActionBar?.title = title
+
+
         val id = intent.getIntExtra("data", -1);
         if (id > 0) {
             AsiaRetrofit.create().getMediaOfPost(id, page, perPage).enqueue(this)
@@ -77,14 +84,18 @@ class PostActivity : AppCompatActivity(), Callback<Collection<Wallpaper>> {
     }
 
     private fun initData() {
+
         listWall = ArrayList()
         layoutManager = LinearLayoutManager(this)
         wallAdapter = WallpaperAdapter(this, listWall as ArrayList<Wallpaper>)
+
+
         lvListMedia.adapter = wallAdapter;
         var mana: StaggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         mana.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
         lvListMedia.layoutManager = mana
         lvListMedia.setHasFixedSize(true)
+        swipeToRefresh.isRefreshing = true
 
     }
 }
