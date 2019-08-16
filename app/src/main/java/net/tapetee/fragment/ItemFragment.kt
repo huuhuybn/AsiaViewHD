@@ -43,11 +43,11 @@ class ItemFragment : Fragment(), Callback<Collection<Post>> {
 
 
     override fun onFailure(call: Call<Collection<Post>>, t: Throwable) {
-        swipeToRefresh.isRefreshing = false
+        swipeToRefresh?.isRefreshing = false
     }
 
     override fun onResponse(call: Call<Collection<Post>>, response: Response<Collection<Post>>) {
-        swipeToRefresh.isRefreshing = false
+        swipeToRefresh?.isRefreshing = false
         if (response.body() != null) {
 
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -56,14 +56,12 @@ class ItemFragment : Fragment(), Callback<Collection<Post>> {
             listPost?.addAll(response.body()!!)
             list.adapter?.notifyDataSetChanged()
 
-
         } else {
             list.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutManager!!) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
 
                 }
             })
-
         }
     }
 
@@ -99,9 +97,16 @@ class ItemFragment : Fragment(), Callback<Collection<Post>> {
     }
 
 
+    var catId: String = ""
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initData();
+
+        arguments?.let {
+            catId = arguments?.getString("catId")!!
+        }
+
 
         swipeToRefresh.isRefreshing = true
 
@@ -112,11 +117,11 @@ class ItemFragment : Fragment(), Callback<Collection<Post>> {
             listPost?.clear()
             list.adapter?.notifyDataSetChanged()
 
-            AsiaRetrofit.create().getLatestPost(page, perPage).enqueue(this)
+            AsiaRetrofit.create().getLatestPost(catId, page, perPage).enqueue(this)
 
         }
 
-        AsiaRetrofit.create().getLatestPost(page, perPage).enqueue(this)
+        AsiaRetrofit.create().getLatestPost(catId, page, perPage).enqueue(this)
 //        list.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutManager!!) {
 //            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
 //                this@ItemFragment.page++

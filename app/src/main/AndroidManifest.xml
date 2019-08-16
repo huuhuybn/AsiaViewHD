@@ -13,6 +13,19 @@
 			android:roundIcon="@mipmap/ic_launcher_round"
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme">
+		<activity android:name=".ListPostActivity"
+				  android:theme="@style/AppTheme.NoActionBar"/>
+
+
+		<service
+				android:name=".firebase.MyFirebaseMessagingService"
+				android:enabled="true"
+				android:exported="true">
+			<intent-filter>
+				<action android:name="com.google.firebase.MESSAGING_EVENT"/>
+			</intent-filter>
+		</service>
+
 		<activity
 				android:name=".PhotoPagerActivity"
 				android:label="@string/title_activity_photo_pager"

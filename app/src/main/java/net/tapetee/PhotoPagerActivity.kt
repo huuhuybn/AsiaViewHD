@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_photo_pager.*
 import kotlinx.android.synthetic.main.category.*
 import kotlinx.android.synthetic.main.download_dialog.*
 import net.tapetee.adapter.WallpaperAdapter
+import net.tapetee.download.AsianDownloader
 import net.tapetee.model.media.Wallpaper
 import net.tapetee.ui.main.SectionsPagerAdapter
 
@@ -71,10 +72,22 @@ class PhotoPagerActivity : AppCompatActivity() {
 
             var wallpaper: Wallpaper? = WallpaperAdapter.listWallpaper?.get(view_pager.currentItem)
 
+            var downloadManager = AsianDownloader()
+
             wallpaper?.mediaDetails?.sizes?.full?.let {
                 full?.visibility = View.VISIBLE
                 full?.text = wallpaper?.mediaDetails?.sizes?.full?.height.toString().plus("x")
                     .plus(wallpaper?.mediaDetails?.sizes?.full?.width.toString())
+
+
+                full?.setOnClickListener(object : View.OnClickListener {
+                    override fun onClick(p0: View?) {
+                        downloadManager.showDownload(
+                            this@PhotoPagerActivity,
+                            wallpaper?.mediaDetails?.sizes?.full?.sourceUrl!!
+                        )
+                    }
+                })
             }
             wallpaper?.mediaDetails?.sizes?.large?.let {
                 large?.visibility = View.VISIBLE

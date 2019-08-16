@@ -6,11 +6,14 @@ import net.tapetee.model.post.Post
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
+
 interface AsiaService {
 
     //http://asian.dotplays.com/wp-json/wp/v2/posts?_embed
+    // get latest post or get post in category
+
     @GET("wp-json/wp/v2/posts?_embed")
-    fun getLatestPost(@Query("page") page: Int, @Query("per_page") per_page: Int): Call<Collection<Post>>
+    fun getLatestPost(@Query("categories") category: String, @Query("page") page: Int, @Query("per_page") per_page: Int): Call<Collection<Post>>
 
 
     //http://asian.dotplays.com/wp-json/wp/v2/media?parent=524

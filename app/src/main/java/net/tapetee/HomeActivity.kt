@@ -36,7 +36,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        StartAppSDK.init(this, "207929456", true);
+        //StartAppSDK.init(this, "207929456", true);
 
         initView()
     }
